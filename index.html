@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BM O Level — Ulang Kaji Tahun 11</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Fira+Mono:wght@400;700&display=swap');
+:root {
+  --bg:#0D1117;--surface:#161B22;--surface2:#21262D;--border:#30363D;
+  --green:#00E676;--blue:#58A6FF;--purple:#BC8CFF;--orange:#FFA657;
+  --red:#FF7B72;--yellow:#E3B341;--pink:#F778BA;--teal:#39D353;
+  --text:#F0F6FC;--dim:#8B949E;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 40%,rgba(88,166,255,0.07) 0%,transparent 55%),radial-gradient(ellipse at 85% 20%,rgba(188,140,255,0.06) 0%,transparent 55%);pointer-events:none;z-index:0;}
+
+.screen{display:none;position:relative;z-index:1;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* LANDING */
+#landing{align-items:center;justify-content:center;padding:40px 20px;text-align:center;}
+.brand{font-size:clamp(2rem,8vw,4.5rem);font-weight:900;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:6px;}
+.brand-sub{font-size:clamp(0.75rem,2vw,0.95rem);color:var(--dim);letter-spacing:3px;text-transform:uppercase;margin-bottom:48px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.card h2{font-size:1.1rem;font-weight:700;margin-bottom:6px;color:var(--blue);}
+.card p{font-size:0.85rem;color:var(--dim);margin-bottom:28px;line-height:1.6;}
+input[type=text]{width:100%;background:var(--surface2);border:2px solid var(--border);border-radius:10px;padding:14px 18px;font-size:0.95rem;font-family:'Poppins',sans-serif;color:var(--text);outline:none;transition:all 0.3s;margin-bottom:16px;}
+input[type=text]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(88,166,255,0.15);}
+input::placeholder{color:var(--dim);}
+.btn-main{background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:10px;padding:14px 28px;font-size:0.95rem;font-weight:700;font-family:'Poppins',sans-serif;color:#fff;cursor:pointer;width:100%;transition:all 0.3s;}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(88,166,255,0.35);}
+.chips{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap;}
+.chip{background:rgba(88,166,255,0.08);border:1px solid rgba(88,166,255,0.2);border-radius:8px;padding:8px 14px;font-size:0.78rem;color:var(--blue);text-align:center;}
+.chip span{display:block;font-size:1.2rem;font-weight:800;font-family:'Fira Mono',monospace;}
+
+/* SKILL SELECT */
+#skillselect{padding:28px 20px;max-width:1100px;margin:0 auto;width:100%;}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+.page-title{font-size:clamp(1.2rem,4vw,1.8rem);font-weight:800;}
+.page-title span{color:var(--blue);}
+.page-sub{font-size:0.82rem;color:var(--dim);margin-top:3px;}
+.btn-ghost{background:transparent;border:1px solid var(--border);border-radius:8px;padding:9px 18px;font-size:0.82rem;font-family:'Poppins',sans-serif;color:var(--dim);cursor:pointer;transition:all 0.3s;}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+
+.sec-label{font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--dim);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:28px;}
+.skill-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;}
+.skill-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,var(--blue));transform:scaleX(0);transition:transform 0.3s;}
+.skill-card:hover::before,.skill-card.sel::before{transform:scaleX(1);}
+.skill-card:hover{border-color:var(--c,var(--blue));transform:translateY(-2px);}
+.skill-card.sel{border-color:var(--c,var(--blue));background:rgba(88,166,255,0.06);}
+.sk-icon{font-size:1.6rem;margin-bottom:8px;display:block;}
+.sk-name{font-size:0.95rem;font-weight:700;margin-bottom:3px;}
+.sk-sub{font-size:0.75rem;color:var(--dim);line-height:1.4;}
+.sk-count{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:0.68rem;font-family:'Fira Mono',monospace;color:var(--dim);}
+
+.subtopic-panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;display:none;}
+.subtopic-panel.open{display:block;}
+.st-title{font-size:0.85rem;font-weight:700;margin-bottom:14px;color:var(--yellow);}
+.st-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.st-chip{background:var(--surface2);border:2px solid var(--border);border-radius:8px;padding:7px 14px;font-size:0.8rem;cursor:pointer;transition:all 0.25s;font-family:'Poppins',sans-serif;color:var(--text);}
+.st-chip:hover{border-color:var(--yellow);color:var(--yellow);}
+.st-chip.active{border-color:var(--yellow);background:rgba(227,179,65,0.1);color:var(--yellow);}
+
+.start-bar{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg) 60%,transparent);padding:20px 0 10px;display:flex;justify-content:center;}
+.btn-start{background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:12px;padding:15px 44px;font-size:1rem;font-weight:700;font-family:'Poppins',sans-serif;color:#fff;cursor:pointer;transition:all 0.3s;}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(88,166,255,0.4);}
+.btn-start:disabled{opacity:0.35;pointer-events:none;}
+
+/* QUIZ */
+#quiz{padding:20px;max-width:860px;margin:0 auto;width:100%;}
+.q-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.q-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.q-tag{background:rgba(88,166,255,0.1);border:1px solid rgba(88,166,255,0.3);border-radius:7px;padding:5px 12px;font-size:0.75rem;color:var(--blue);font-weight:600;}
+.q-num{font-family:'Fira Mono',monospace;font-size:0.82rem;color:var(--dim);}
+.streak-box{display:flex;align-items:center;gap:8px;}
+.streak{background:linear-gradient(135deg,#FF6B35,#FFD700);border-radius:7px;padding:4px 10px;font-size:0.78rem;font-weight:800;color:#000;font-family:'Fira Mono',monospace;}
+.pts{font-family:'Fira Mono',monospace;font-size:0.82rem;color:var(--dim);}
+.timer{display:flex;align-items:center;gap:6px;font-family:'Fira Mono',monospace;font-size:1rem;font-weight:700;min-width:45px;}
+.timer.warn{color:var(--red);}
+
+.q-pbar{height:5px;background:rgba(255,255,255,0.06);border-radius:3px;margin-bottom:22px;overflow:hidden;}
+.q-pfill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:3px;transition:width 0.5s;}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;margin-bottom:18px;animation:fadeUp 0.4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.q-type{display:inline-block;background:rgba(188,140,255,0.12);border:1px solid rgba(188,140,255,0.35);border-radius:6px;padding:3px 10px;font-size:0.68rem;color:var(--purple);letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:14px;}
+.q-text{font-size:clamp(0.9rem,2vw,1.02rem);font-weight:500;line-height:1.65;color:var(--text);margin-bottom:20px;}
+.q-context{background:var(--surface2);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:18px;font-size:0.85rem;color:#C9D1D9;font-style:italic;line-height:1.7;}
+
+.hint-btn{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(227,179,65,0.3);border-radius:7px;padding:5px 12px;font-size:0.78rem;color:var(--yellow);cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.3s;margin-bottom:16px;}
+.hint-btn:hover{background:rgba(227,179,65,0.08);}
+.hint-box{background:rgba(227,179,65,0.06);border:1px solid rgba(227,179,65,0.2);border-radius:8px;padding:10px 14px;font-size:0.82rem;color:#F5DEB3;margin-bottom:16px;display:none;animation:fadeUp 0.3s ease;}
+
+.opts{display:grid;gap:10px;}
+.opt{background:var(--surface2);border:2px solid var(--border);border-radius:12px;padding:14px 18px;text-align:left;cursor:pointer;transition:all 0.25s;font-family:'Poppins',sans-serif;font-size:0.88rem;color:var(--text);display:flex;align-items:center;gap:12px;}
+.opt:hover{border-color:var(--blue);background:rgba(88,166,255,0.06);transform:translateX(4px);}
+.opt:disabled{cursor:default;transform:none;}
+.opt-key{width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-family:'Fira Mono',monospace;font-size:0.75rem;font-weight:700;flex-shrink:0;transition:all 0.25s;}
+.opt:hover .opt-key{background:var(--blue);border-color:var(--blue);color:#000;}
+.opt.correct{border-color:var(--green)!important;background:rgba(0,230,118,0.08)!important;}
+.opt.correct .opt-key{background:var(--green)!important;border-color:var(--green)!important;color:#000!important;}
+.opt.wrong{border-color:var(--red)!important;background:rgba(255,123,114,0.08)!important;}
+.opt.wrong .opt-key{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important;}
+.opt.reveal{border-color:rgba(0,230,118,0.4)!important;background:rgba(0,230,118,0.04)!important;}
+
+.fb{border-radius:12px;padding:20px;margin-top:16px;display:none;animation:fadeUp 0.35s ease;}
+.fb.ok{background:rgba(0,230,118,0.07);border:1px solid rgba(0,230,118,0.25);}
+.fb.bad{background:rgba(255,123,114,0.07);border:1px solid rgba(255,123,114,0.25);}
+.fb-head{display:flex;align-items:center;gap:8px;font-size:1rem;font-weight:700;margin-bottom:10px;}
+.fb-exp{font-size:0.84rem;color:#C9D1D9;line-height:1.7;}
+.fb-note{background:rgba(0,0,0,0.25);border-radius:7px;padding:8px 13px;margin-top:10px;font-family:'Fira Mono',monospace;font-size:0.8rem;color:var(--yellow);border-left:3px solid var(--yellow);}
+
+.btn-next{background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:10px;padding:12px 28px;font-size:0.9rem;font-weight:700;font-family:'Poppins',sans-serif;color:#fff;cursor:pointer;transition:all 0.3s;margin-top:14px;display:none;}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(88,166,255,0.4);}
+
+/* RESULTS */
+#results{align-items:center;justify-content:center;padding:40px 20px;text-align:center;}
+.res-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;max-width:580px;width:100%;}
+.grade-ring{width:110px;height:110px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900;font-family:'Fira Mono',monospace;animation:pop 0.5s cubic-bezier(.175,.885,.32,1.275);}
+@keyframes pop{from{opacity:0;transform:scale(0.4);}to{opacity:1;transform:scale(1);}}
+.gA{background:rgba(0,230,118,0.1);border:3px solid var(--green);color:var(--green);}
+.gB{background:rgba(88,166,255,0.1);border:3px solid var(--blue);color:var(--blue);}
+.gC{background:rgba(227,179,65,0.1);border:3px solid var(--yellow);color:var(--yellow);}
+.gD{background:rgba(255,166,87,0.1);border:3px solid var(--orange);color:var(--orange);}
+.gF{background:rgba(255,123,114,0.1);border:3px solid var(--red);color:var(--red);}
+.res-title{font-size:1.5rem;font-weight:800;margin-bottom:5px;}
+.res-sub{color:var(--dim);font-size:0.85rem;margin-bottom:24px;}
+.res-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:24px;}
+.rstat{background:var(--surface2);border-radius:10px;padding:14px;}
+.rstat-v{font-family:'Fira Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--blue);}
+.rstat-l{font-size:0.72rem;color:var(--dim);margin-top:3px;}
+.res-acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.btn-retry{background:transparent;border:2px solid var(--blue);border-radius:10px;padding:11px 24px;font-size:0.88rem;font-weight:700;font-family:'Poppins',sans-serif;color:var(--blue);cursor:pointer;transition:all 0.3s;}
+.btn-retry:hover{background:rgba(88,166,255,0.1);}
+
+/* PROGRESS */
+#progress{padding:28px 20px;max-width:900px;margin:0 auto;width:100%;}
+.prog-bar-wrap{height:10px;background:rgba(255,255,255,0.06);border-radius:5px;margin:10px 0 6px;overflow:hidden;}
+.prog-bar-fill{height:100%;border-radius:5px;transition:width 1s ease;}
+.hist-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.hist-topic{font-weight:700;font-size:0.88rem;}
+.hist-time{font-size:0.75rem;color:var(--dim);margin-top:2px;}
+.hist-score{font-family:'Fira Mono',monospace;font-size:1rem;font-weight:700;}
+.hist-grade{padding:3px 10px;border-radius:5px;font-size:0.75rem;font-weight:800;font-family:'Fira Mono',monospace;}
+.skill-perf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:14px;}
+.spg{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.spg-name{font-size:0.85rem;font-weight:700;margin-bottom:6px;}
+.spg-info{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--dim);margin-bottom:6px;}
+.spg-bar{height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.spg-fill{height:100%;border-radius:3px;transition:width 1s;}
+
+.shake{animation:shake 0.4s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-7px);}75%{transform:translateX(7px);}}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div class="screen active" id="landing">
+  <div class="brand">BM Ace 🇲🇾</div>
+  <div class="brand-sub">O Level Bahasa Melayu · Tahun 11 · Ulang Kaji</div>
+  <div class="card">
+    <h2>Selamat Datang!</h2>
+    <p>Sistem latihan komprehensif merangkumi Penulisan, Kefahaman, Rumusan, Tatabahasa dan Peribahasa.</p>
+    <input type="text" id="nameInput" placeholder="Masukkan nama anda..." maxlength="30">
+    <button class="btn-main" onclick="startApp()">🚀 Mulakan Latihan</button>
+    <div class="chips">
+      <div class="chip"><span>5</span>Komponen</div>
+      <div class="chip"><span>30+</span>Subtopik</div>
+      <div class="chip"><span>500+</span>Soalan</div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILL SELECT -->
+<div class="screen" id="skillselect">
+  <div class="top-bar">
+    <div>
+      <div class="page-title">Halo, <span id="uname">Pelajar</span>!</div>
+      <div class="page-sub">Pilih kemahiran yang hendak dilatih hari ini.</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-ghost" onclick="showProgress()">📊 Prestasi Saya</button>
+    </div>
+  </div>
+
+  <div class="sec-label">Pilih Kemahiran</div>
+  <div class="skills-grid" id="skillsGrid"></div>
+
+  <div class="subtopic-panel" id="stPanel">
+    <div class="st-title">📌 Pilih Sub-Topik (pilihan — kosongkan untuk semua)</div>
+    <div class="st-grid" id="stGrid"></div>
+  </div>
+
+  <div class="start-bar">
+    <button class="btn-start" id="startBtn" onclick="beginQuiz()" disabled>Pilih kemahiran untuk bermula →</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="quiz">
+  <div class="q-topbar">
+    <div class="q-meta">
+      <div class="q-tag" id="qTag">Tatabahasa</div>
+      <div class="q-num" id="qNum">S 1/15</div>
+    </div>
+    <div class="streak-box">
+      <div class="streak" id="streakEl">🔥 0</div>
+      <div class="pts" id="ptsEl">0 mata</div>
+    </div>
+    <div class="timer" id="timerEl">⏱ 60</div>
+  </div>
+  <div class="q-pbar"><div class="q-pfill" id="qPfill" style="width:0%"></div></div>
+  <div class="q-card" id="qCard">
+    <div class="q-type" id="qTypeEl">Aneka Pilihan</div>
+    <div class="q-context" id="qCtx" style="display:none"></div>
+    <div class="q-text" id="qText"></div>
+    <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Tunjukkan Petunjuk</button>
+    <div class="hint-box" id="hintBox"></div>
+    <div class="opts" id="optsEl"></div>
+    <div class="fb" id="fbEl">
+      <div class="fb-head"><span id="fbIcon"></span><span id="fbTitle"></span></div>
+      <div class="fb-exp" id="fbExp"></div>
+      <div class="fb-note" id="fbNote" style="display:none"></div>
+    </div>
+    <button class="btn-next" id="nextBtn" onclick="nextQ()">Soalan Seterusnya →</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="results">
+  <div class="res-card">
+    <div class="grade-ring" id="gradeRing">A</div>
+    <div class="res-title" id="resTitle">Cemerlang!</div>
+    <div class="res-sub" id="resSub">Teruskan semangat!</div>
+    <div class="res-stats">
+      <div class="rstat"><div class="rstat-v" id="rsScore">0/15</div><div class="rstat-l">Markah</div></div>
+      <div class="rstat"><div class="rstat-v" id="rsPct">0%</div><div class="rstat-l">Tepat</div></div>
+      <div class="rstat"><div class="rstat-v" id="rsTime">0s</div><div class="rstat-l">Min. Masa</div></div>
+    </div>
+    <div class="res-acts">
+      <button class="btn-retry" onclick="retryQuiz()">🔁 Cuba Semula</button>
+      <button class="btn-start" onclick="backToSelect()">📚 Kemahiran Lain</button>
+      <button class="btn-ghost" onclick="showProgress()">📊 Prestasi</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="screen" id="progress">
+  <div class="top-bar">
+    <div>
+      <div class="page-title">📊 Prestasi Saya</div>
+      <div class="page-sub" id="progName"></div>
+    </div>
+    <button class="btn-ghost" onclick="backToSelect()">← Kembali</button>
+  </div>
+  <div class="sec-label">Keseluruhan</div>
+  <div class="prog-bar-wrap"><div class="prog-bar-fill" id="overallBar" style="width:0%;background:linear-gradient(90deg,var(--blue),var(--purple))"></div></div>
+  <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--dim);margin-bottom:24px;">
+    <span id="ovText">0% tepat</span><span id="ovQ">0 soalan dijawab</span>
+  </div>
+  <div class="sec-label">Mengikut Kemahiran</div>
+  <div class="skill-perf-grid" id="skillPerfGrid"></div>
+  <div class="sec-label" style="margin-top:24px;">Sesi Terkini</div>
+  <div id="histList"><p style="color:var(--dim);font-size:0.85rem;">Tiada sesi lagi.</p></div>
+  <div style="text-align:center;margin-top:20px;">
+    <button class="btn-ghost" onclick="clearProg()" style="color:var(--red);border-color:var(--red);">🗑 Padam Semua Data</button>
+  </div>
+</div>
+
+<script>
+// ===================== AUDIO =====================
+let actx;
+function ac(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx;}
+function tone(f,t='sine',d=0.18,v=0.28,dl=0){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=t;o.frequency.setValueAtTime(f,c.currentTime+dl);g.gain.setValueAtTime(0,c.currentTime+dl);g.gain.linearRampToValueAtTime(v,c.currentTime+dl+0.02);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dl+d);o.start(c.currentTime+dl);o.stop(c.currentTime+dl+d+0.05);}catch(e){}}
+function sfxOk(){tone(523,'sine',0.12,0.25);tone(659,'sine',0.12,0.25,0.1);tone(784,'sine',0.18,0.25,0.2);}
+function sfxWrong(){tone(200,'sawtooth',0.25,0.28);tone(150,'sawtooth',0.18,0.2,0.12);}
+function sfxClick(){tone(700,'sine',0.05,0.15);}
+function sfxNext(){tone(440,'triangle',0.08,0.2);}
+function sfxDone(){[523,659,784,1047].forEach((f,i)=>tone(f,'sine',0.25,0.28,i*0.12));}
+
+// ===================== SKILLS & QB =====================
+const SKILLS = [
+  {id:'penulisan',  name:'Penulisan',      icon:'✍️', color:'var(--blue)',   sub:'Format · Idea · Wacana · Imbuhan dalam karangan',
+   subtopics:['Karangan Berformat','Karangan Tidak Berformat','Format Surat Rasmi','Format Laporan','Format Berita','Penanda Wacana','Variasi Ayat','Peribahasa dalam Karangan']},
+  {id:'kefahaman',  name:'Kefahaman',      icon:'📖', color:'var(--purple)', sub:'Fakta · Inferens · Nilai Murni · KBAT',
+   subtopics:['Soalan Fakta Langsung','Soalan Inferens','Maksud Perkataan','Nilai Murni & Pengajaran','Soalan KBAT','Gaya Bahasa']},
+  {id:'rumusan',    name:'Rumusan',        icon:'📝', color:'var(--teal)',   sub:'Isi tersurat · Bahasa sendiri · Had perkataan',
+   subtopics:['Mengenal Pasti Isi Tersurat','Elak Huraian Lebihan','Penggunaan Bahasa Sendiri','Had Perkataan','Ayat Gramatis dalam Rumusan']},
+  {id:'tatabahasa', name:'Tatabahasa',     icon:'🔤', color:'var(--orange)', sub:'Imbuhan · Kata Ganda · Ayat Aktif/Pasif · dan lagi',
+   subtopics:['Imbuhan Awalan','Imbuhan Akhiran','Imbuhan Apitan','Imbuhan Sisipan','Kata Ganda','Kata Majmuk','Penjodoh Bilangan','Kata Hubung','Kata Sendi Nama','Kata Pemeri','Kata Penguat','Kata Nafi','Ayat Aktif & Pasif','Cakap Ajuk & Cakap Pindah','Kesalahan Bahasa','Tanda Baca']},
+  {id:'peribahasa', name:'Peribahasa',     icon:'🌿', color:'var(--green)',  sub:'Simpulan Bahasa · Pepatah · Perumpamaan · Bidalan',
+   subtopics:['Simpulan Bahasa','Pepatah','Perumpamaan','Bidalan','Maksud Peribahasa','Penggunaan dalam Ayat']},
+];
+
+const QB = {
+
+// ================================================================
+// TATABAHASA
+// ================================================================
+tatabahasa:[
+  // IMBUHAN AWALAN
+  {sk:'Imbuhan Awalan', type:'Aneka Pilihan',
+   q:'Pilih kata yang menggunakan imbuhan awalan <b>me-</b> yang betul.',
+   opts:['Memasak','Menjual','Membuat','Semua betul'],ans:3,
+   hint:'me- boleh berubah bentuk kepada mem-, men-, meng-, meny-',
+   exp:'Semua pilihan adalah betul. Imbuhan awalan me- berubah bentuk bergantung pada huruf pertama kata dasar: mem- (b, p), men- (d, t), meng- (g, k, a-u), meny- (s), me- (l, m, n, r, w, y).',
+   note:'Peraturan: me + buat = membuat, me + jual = menjual, me + masak = memasak'},
+
+  {sk:'Imbuhan Awalan', type:'Aneka Pilihan',
+   q:'Antara berikut, kata yang menggunakan awalan <b>ber-</b> dengan betul ialah:',
+   opts:['Bercakap','Berkata','Berlari','Semua betul'],ans:3,
+   hint:'ber- digunakan untuk membentuk kata kerja tak transitif',
+   exp:'Ber- boleh membawa makna: (1) mempunyai (beranak), (2) melakukan perbuatan (bercakap), (3) menggunakan sesuatu (berkereta), (4) dalam keadaan (berpakaian).',
+   note:'ber- → be- apabila diikuti kata yang bermula dengan r (berenang, bukan berrenang)'},
+
+  {sk:'Imbuhan Awalan', type:'Aneka Pilihan',
+   q:'Pilih imbuhan awalan yang tepat untuk kata dasar <i>"ajar"</i> dalam ayat: "Ibu _____ saya membaca."',
+   opts:['mengajar','melajar','memajar','menajar'],ans:0,
+   hint:'Huruf pertama "ajar" ialah vokal. Awalan me + vokal = meng-',
+   exp:'me- + ajar = mengajar (kata dasar bermula huruf vokal → guna meng-). Contoh lain: meng + ikut = mengikut, meng + ambil = mengambil.',
+   note:'me + a/e/i/o/u = meng-'},
+
+  {sk:'Imbuhan Awalan', type:'Aneka Pilihan',
+   q:'Kata <b>"pelajar"</b> menggunakan imbuhan awalan:',
+   opts:['pe-','per-','meN-','ber-'],ans:0,
+   hint:'Lihat bentuk kata tersebut — ia kata nama, bukan kata kerja',
+   exp:'pe- + lajar → pelajar. Imbuhan pe- membentuk kata nama yang bermaksud "orang yang melakukan" atau "sesuatu yang berkaitan". Contoh: penulis, pembaca, pelakon.',
+   note:'pe- (orang/benda pelaku), pe-an (tempat/perkara)'},
+
+  // IMBUHAN AKHIRAN
+  {sk:'Imbuhan Akhiran', type:'Aneka Pilihan',
+   q:'Imbuhan akhiran <b>-kan</b> berfungsi untuk:',
+   opts:['Menjadikan kata kerja transitif','Menjadikan kata nama','Menyatakan perbuatan spontan','Semua di atas'],ans:0,
+   hint:'Fikirkan "baca" vs "bacakan" — apakah bezanya?',
+   exp:'-kan membentuk kata kerja transitif. "Bacakan buku itu kepadanya" — ada objek yang menerima perbuatan. Berbeza dengan -i yang bermaksud melakukan perbuatan pada sesuatu.',
+   note:'-kan → memerlukan objek; -i → diikuti tempat/sasaran'},
+
+  {sk:'Imbuhan Akhiran', type:'Aneka Pilihan',
+   q:'Pilih ayat yang menggunakan akhiran <b>-i</b> dengan betul.',
+   opts:['Dia menghuni rumah pusaka itu.','Dia menghuniakan rumah pusaka itu.','Dia dihunikan rumah pusaka itu.','Tiada jawapan betul'],ans:0,
+   hint:'-i digunakan apabila subjek melakukan perbuatan di/pada tempat atau sasaran',
+   exp:'"Menghuni" (me- + huni + -i) bermaksud tinggal di sesuatu tempat. Kata akhiran -i biasanya digunakan untuk menunjukkan perbuatan yang berlaku di/pada sesuatu. Contoh: menduduki, memasuki.',
+   note:'-i: berlaku di tempat/pada sasaran; -kan: menyebabkan sesuatu berlaku'},
+
+  // IMBUHAN APITAN
+  {sk:'Imbuhan Apitan', type:'Aneka Pilihan',
+   q:'Kata <b>"keberanian"</b> menggunakan apitan:',
+   opts:['ke-...-an','ber-...-an','peN-...-an','me-...-kan'],ans:0,
+   hint:'Apitan = imbuhan yang diletakkan pada kedua-dua hujung kata dasar',
+   exp:'keberanian = ke- + berani + -an. Apitan ke-...-an membentuk kata nama abstrak yang bermaksud sifat atau keadaan. Contoh: kebebasan, keindahan, kemajuan.',
+   note:'ke-...-an = sifat/keadaan (abstrak)'},
+
+  {sk:'Imbuhan Apitan', type:'Aneka Pilihan',
+   q:'Apitan <b>peN-...-an</b> dalam kata "pembelajaran" bermaksud:',
+   opts:['Proses/hasil belajar','Orang yang belajar','Tempat belajar','Cara belajar'],ans:0,
+   hint:'peN-...-an biasanya membentuk kata nama yang merujuk proses atau hasil',
+   exp:'pembelajaran = pe- + belajar + -an → proses/hasil belajar. peN-...-an sering bermaksud proses, perbuatan atau hasil. Contoh: pengajaran (proses mengajar), penilaian (proses menilai).',
+   note:'peN-...-an = proses/hasil tindakan'},
+
+  // KATA GANDA
+  {sk:'Kata Ganda', type:'Aneka Pilihan',
+   q:'Kata ganda <b>"berlari-lari"</b> merupakan jenis kata ganda:',
+   opts:['Kata ganda berentak','Kata ganda penuh','Kata ganda separa','Kata ganda berimbuhan'],ans:3,
+   hint:'Ia melibatkan pengulangan + imbuhan',
+   exp:'"Berlari-lari" ialah kata ganda berimbuhan — kata dasar "lari" digandakan dengan imbuhan ber- pada gandaan pertama. Ini berbeza daripada kata ganda penuh (buku-buku), separa (lelaki) dan berentak (compang-camping).',
+   note:'Jenis KG: penuh, separa, berentak, berimbuhan'},
+
+  {sk:'Kata Ganda', type:'Aneka Pilihan',
+   q:'Manakah contoh kata ganda berentak yang betul?',
+   opts:['Compang-camping','Buku-buku','Lelaki','Memukul-mukul'],ans:0,
+   hint:'Kata ganda berentak mempunyai bunyi yang berirama/bersajak',
+   exp:'"Compang-camping" ialah kata ganda berentak — kedua-dua unsur tidak boleh berdiri sendiri dan mempunyai bunyi yang berulang. Contoh lain: sayur-mayur, lauk-pauk, tunggang-langgang.',
+   note:'Berentak: bunyi berirama, unsur tidak bermakna bersendirian'},
+
+  {sk:'Kata Ganda', type:'Aneka Pilihan',
+   q:'Dalam ayat "Budak-budak itu bermain di padang", kata ganda "budak-budak" bermaksud:',
+   opts:['Ramai/jamak','Saiz kecil','Bermain-main','Kurang pasti'],ans:0,
+   hint:'Kata ganda penuh + kata nama = jamak',
+   exp:'Kata ganda penuh pada kata nama menunjukkan jamak (banyak). "Budak-budak" = ramai budak. Berbeza dengan kata ganda penuh pada kata kerja yang menunjukkan berulang/terus-menerus.',
+   note:'Kata nama digandakan = jamak; kata kerja digandakan = berulang'},
+
+  // KATA MAJMUK
+  {sk:'Kata Majmuk', type:'Aneka Pilihan',
+   q:'Antara berikut, manakah kata majmuk yang betul penulisannya?',
+   opts:['Tandatangan','Matahari','Setiausaha','Semua betul'],ans:3,
+   hint:'Kata majmuk ditulis terpisah KECUALI yang sudah mantap',
+   exp:'Kata majmuk yang sudah mantap ditulis serangkai (bercantum): tandatangan, matahari, setiausaha, warganegara. Kata majmuk biasa ditulis berasingan: alat tulis, buku teks.',
+   note:'Mantap = serangkai; belum mantap = berasingan'},
+
+  {sk:'Kata Majmuk', type:'Aneka Pilihan',
+   q:'Penulisan yang betul untuk kata majmuk ialah:',
+   opts:['Kapal terbang','Kapalterbang','Kapal-terbang','Semua betul'],ans:0,
+   hint:'Ini kata majmuk yang belum mantap — ditulis berasingan',
+   exp:'"Kapal terbang" ditulis berasingan kerana belum mantap. Hanya kata majmuk yang sudah menjadi sebati dan mantap ditulis serangkai. Gunakan panduan DBP sebagai rujukan.',
+   note:'Kapal terbang (berasingan) ≠ setiausaha (serangkai)'},
+
+  // PENJODOH BILANGAN
+  {sk:'Penjodoh Bilangan', type:'Aneka Pilihan',
+   q:'Penjodoh bilangan yang tepat untuk "kertas" ialah:',
+   opts:['Helai','Biji','Ekor','Buah'],ans:0,
+   hint:'Penjodoh bilangan bagi benda tipis dan lembaran',
+   exp:'"Helai" digunakan untuk benda yang nipis/lembaran seperti kertas, kain, daun, rambut. Biji → benda bulat/kecil. Ekor → haiwan. Buah → benda besar/umum.',
+   note:'Helai: nipis/lembaran; Biji: kecil/bulat; Ekor: haiwan; Orang: manusia'},
+
+  {sk:'Penjodoh Bilangan', type:'Aneka Pilihan',
+   q:'Pilih penjodoh bilangan yang paling tepat: "Tiga ___ guru menghadiri mesyuarat itu."',
+   opts:['Orang','Ekor','Biji','Helai'],ans:0,
+   hint:'Penjodoh bilangan untuk manusia ialah "orang"',
+   exp:'"Orang" ialah penjodoh bilangan untuk manusia. Ekor → haiwan. Biji → benda kecil/bulat. Helai → benda nipis. Jadi: tiga orang guru.',
+   note:'Manusia → orang; Haiwan → ekor; Benda tipis → helai'},
+
+  {sk:'Penjodoh Bilangan', type:'Aneka Pilihan',
+   q:'Penjodoh bilangan yang sesuai untuk "ikan" ialah:',
+   opts:['Ekor','Orang','Helai','Batang'],ans:0,
+   hint:'Penjodoh bilangan untuk haiwan',
+   exp:'"Ekor" digunakan untuk haiwan termasuk ikan, ayam, kucing, dan sebagainya. Orang → manusia. Helai → nipis/lembaran. Batang → panjang/tegak.',
+   note:'Ekor: semua haiwan'},
+
+  // KATA HUBUNG
+  {sk:'Kata Hubung', type:'Aneka Pilihan',
+   q:'Kata hubung yang menunjukkan hubungan <b>sebab-akibat</b> ialah:',
+   opts:['Kerana','Dan','Tetapi','Atau'],ans:0,
+   hint:'Hubungan sebab → akibat menggunakan kata hubung kausatif',
+   exp:'"Kerana" menunjukkan sebab. Contoh: "Dia lambat ke sekolah kerana terlena." Kata hubung lain yang serupa: lantaran, disebabkan, oleh sebab. "Dan" = tambahan; "tetapi" = pertentangan; "atau" = pilihan.',
+   note:'Kerana/lantaran = sebab; Maka/oleh itu = akibat'},
+
+  {sk:'Kata Hubung', type:'Aneka Pilihan',
+   q:'Pilih ayat yang menggunakan kata hubung <b>"walaupun"</b> dengan betul.',
+   opts:['Walaupun hujan, mereka tetap bermain.','Walaupun dia rajin, tetapi dia gagal.','Mereka bermain walaupun dan basah.','Dia datang walaupun atau tidak'],ans:0,
+   hint:'"Walaupun" = kontrast/berlawanan. Jangan gunakan "tetapi" bersamanya.',
+   exp:'"Walaupun" ialah kata hubung pertentangan. Elak penggunaan "walaupun...tetapi" — ini kesalahan berganda. Betul: "Walaupun hujan, mereka tetap bermain." atau "Mereka tetap bermain walaupun hujan."',
+   note:'Kesalahan lazim: "Walaupun...tetapi" — pilih SATU sahaja'},
+
+  // KATA SENDI NAMA
+  {sk:'Kata Sendi Nama', type:'Aneka Pilihan',
+   q:'Kata sendi nama yang betul dalam ayat "Dia pergi ___ sekolah" ialah:',
+   opts:['ke','di','dari','daripada'],ans:0,
+   hint:'"ke" menunjukkan arah/pergerakan ke suatu tempat',
+   exp:'"ke" = menuju ke arah sesuatu tempat (pergerakan). "di" = tempat berada/statis. "dari" = asal tempat. "daripada" = asal (untuk benda hidup/abstrak). Jadi: pergi ke sekolah, berada di sekolah, balik dari sekolah.',
+   note:'ke = hala tuju; di = lokasi statik; dari(pada) = asal'},
+
+  {sk:'Kata Sendi Nama', type:'Aneka Pilihan',
+   q:'Ayat manakah yang menggunakan kata sendi nama dengan betul?',
+   opts:['Buku itu terjatuh dari mejanya.','Dia duduk ke kerusi.','Saya tinggal daripada Johor.','Dia balik di kampung.'],ans:0,
+   hint:'Semak penggunaan "dari" vs "daripada" vs "ke" vs "di"',
+   exp:'"Dari" digunakan untuk tempat asal (dari meja, dari sekolah). "Daripada" untuk manusia/abstrak (daripada Encik Ali, daripada segi). "ke" untuk arah. "di" untuk lokasi statik.',
+   note:'"dari" = tempat; "daripada" = orang/abstrak'},
+
+  // KATA PEMERI
+  {sk:'Kata Pemeri', type:'Aneka Pilihan',
+   q:'Kata pemeri dalam Bahasa Melayu ialah:',
+   opts:['Ialah dan adalah','Dan dan atau','Pada dan untuk','Ini dan itu'],ans:0,
+   hint:'Kata pemeri menghubungkan subjek dengan predikat',
+   exp:'"Ialah" dan "adalah" ialah kata pemeri. "Ialah" digunakan apabila predikat adalah kata nama/frasa nama. "Adalah" digunakan apabila predikat adalah kata adjektif/frasa adjektif.',
+   note:'"Ialah" + kata nama; "adalah" + kata adjektif'},
+
+  {sk:'Kata Pemeri', type:'Aneka Pilihan',
+   q:'Pilih penggunaan kata pemeri yang betul.',
+   opts:['Ahmad ialah seorang doktor.','Ahmad adalah seorang doktor.','Ahmad ialah rajin.','Ahmad adalah peguam itu.'],ans:0,
+   hint:'"Ialah" + frasa nama; "adalah" + frasa adjektif',
+   exp:'"Ahmad ialah seorang doktor" — betul kerana predikat (seorang doktor) adalah frasa nama. "Ahmad adalah rajin" — betul kerana predikat (rajin) adalah adjektif. "Ahmad ialah rajin" — SALAH.',
+   note:'Ialah + FN ✓; Adalah + FA ✓; Ialah + FA ✗'},
+
+  // KATA PENGUAT
+  {sk:'Kata Penguat', type:'Aneka Pilihan',
+   q:'Kata penguat dalam ayat "Dia <b>sangat</b> bijak" ialah:',
+   opts:['Sangat','Dia','Bijak','Tiada'],ans:0,
+   hint:'Kata penguat memperkuat makna kata adjektif',
+   exp:'"Sangat" ialah kata penguat hadapan (hadir sebelum adjektif). Kata penguat lain: amat, terlalu, paling, sekali (belakang). Contoh: "rajin sekali", "paling tinggi", "amat cantik".',
+   note:'Penguat hadapan: sangat, amat, terlalu; Belakang: sekali, benar'},
+
+  // KATA NAFI
+  {sk:'Kata Nafi', type:'Aneka Pilihan',
+   q:'Kata nafi yang betul untuk kata kerja ialah:',
+   opts:['Tidak','Bukan','Tiada','Tanpa'],ans:0,
+   hint:'"Tidak" menafikan kata kerja dan kata adjektif',
+   exp:'"Tidak" digunakan untuk menafikan kata kerja dan kata adjektif: "tidak makan", "tidak cantik". "Bukan" digunakan untuk menafikan kata nama/frasa nama: "Ini bukan buku saya." "Tiada" = tidak ada.',
+   note:'"Tidak" + KK/KA; "Bukan" + KN'},
+
+  // AYAT AKTIF & PASIF
+  {sk:'Ayat Aktif & Pasif', type:'Aneka Pilihan',
+   q:'Tukarkan ayat aktif berikut kepada ayat pasif: "Ali menulis surat itu."',
+   opts:['Surat itu ditulis oleh Ali.','Surat itu menulis Ali.','Ali ditulis surat itu.','Surat itu telah Ali tulis.'],ans:0,
+   hint:'Objek → subjek; guna kata kerja pasif (di-) + oleh',
+   exp:'Ayat aktif: Ali (S) menulis (KK) surat itu (O). Ayat pasif: Surat itu (S) ditulis (KK pasif) oleh Ali (pelaku). Kata kerja pasif: di- menggantikan meN-.',
+   note:'Aktif: S + meN- + O → Pasif: O + di- + oleh + S'},
+
+  {sk:'Ayat Aktif & Pasif', type:'Aneka Pilihan',
+   q:'Antara berikut, manakah ayat pasif yang betul?',
+   opts:['Buku itu dibaca oleh kakak saya.','Buku itu membaca oleh kakak saya.','Kakak saya dibaca buku itu.','Buku itu kakak membacakannya.'],ans:0,
+   hint:'Ayat pasif mesti ada kata kerja berawalan di-',
+   exp:'"Buku itu dibaca oleh kakak saya" ialah ayat pasif yang betul. Ciri-ciri: (1) objek jadi subjek, (2) kata kerja berawalan di-, (3) pelaku didahului "oleh".',
+   note:'Ayat pasif: di- + kata kerja + oleh + pelaku'},
+
+  {sk:'Ayat Aktif & Pasif', type:'Aneka Pilihan',
+   q:'Dalam ayat pasif dengan ganti nama diri pertama/kedua, bentuknya ialah:',
+   opts:['Saya baca buku itu. / Awak masak nasi ini.','Buku itu disaya baca.','Buku itu dibaca oleh saya.','Semua betul bergantung konteks'],ans:0,
+   hint:'Kata ganti diri tidak pakai "oleh" dalam ayat pasif khas',
+   exp:'Ayat pasif khas (dengan kata ganti diri): ganti nama diri hadir SEBELUM kata kerja tanpa "oleh". Contoh: "Saya baca buku itu." (bukan "Buku itu dibaca oleh saya" — ini kurang tepat untuk orang pertama).',
+   note:'Pasif khas: Saya/Kami/Awak + KK dasar + Objek'},
+
+  // CAKAP AJUK & CAKAP PINDAH
+  {sk:'Cakap Ajuk & Cakap Pindah', type:'Aneka Pilihan',
+   q:'Tukarkan cakap ajuk berikut kepada cakap pindah: "Saya akan datang esok," kata Ali.',
+   opts:['Ali berkata bahawa dia akan datang keesokan harinya.','Ali berkata bahawa saya akan datang esok.','Ali berkata saya akan datang esok.','Ali berkata bahawa ali akan datang esok.'],ans:0,
+   hint:'Tukar "saya" → "dia"; "esok" → "keesokan harinya"',
+   exp:'Cakap pindah: (1) tambah "bahawa", (2) tukar ganti nama (saya→dia), (3) tukar kata waktu/tempat (esok→keesokan harinya, sini→situ), (4) tukar kata tanya jika ada.',
+   note:'Saya→dia; Esok→keesokan harinya; Sini→situ'},
+
+  // KESALAHAN BAHASA
+  {sk:'Kesalahan Bahasa', type:'Aneka Pilihan',
+   q:'Kenal pasti kesalahan dalam ayat: "Dia tidak hadir ke sekolah <b>disebabkan</b> sakit."',
+   opts:['Sepatutnya "disebabkan oleh" atau "kerana"','Ayat ini betul','Sepatutnya "lantaran kerana"','Sepatutnya "oleh sebab disebabkan"'],ans:0,
+   hint:'"Disebabkan" perlu diikuti "oleh" atau gantikan dengan "kerana"',
+   exp:'"Disebabkan" ialah kata kerja pasif yang memerlukan "oleh": "disebabkan oleh penyakit". Atau guna "kerana" sahaja: "kerana sakit". Elak "disebabkan kerana" — ini pertindihan.',
+   note:'"disebabkan oleh" ATAU "kerana" — jangan campur'},
+
+  {sk:'Kesalahan Bahasa', type:'Aneka Pilihan',
+   q:'Ayat manakah yang BETUL dari segi tatabahasa?',
+   opts:['Para pelajar dinasihatkan supaya belajar bersungguh-sungguh.','Para-para pelajar dinasihatkan supaya belajar.','Para pelajar-pelajar dinasihatkan supaya belajar.','Para pelajar dinasihatkan agar supaya belajar.'],ans:0,
+   hint:'"Para" sudah bermaksud jamak — jangan gandakan subjek',
+   exp:'"Para pelajar" sudah menunjukkan ramai. Salah: "para pelajar-pelajar" (berganda). Salah: "agar supaya" (pertindihan — pilih satu). Betul: "para pelajar" + "supaya" ATAU "agar".',
+   note:'"Para" = jamak; "agar supaya" = pertindihan'},
+
+  // TANDA BACA
+  {sk:'Tanda Baca', type:'Aneka Pilihan',
+   q:'Tanda baca yang digunakan untuk memisahkan unsur dalam senarai ialah:',
+   opts:['Koma ( , )','Noktah ( . )','Tanda seru ( ! )','Tanda soal ( ? )'],ans:0,
+   hint:'Koma digunakan untuk memisahkan item dalam senarai',
+   exp:'Koma ( , ) digunakan untuk: (1) memisahkan item dalam senarai, (2) selepas kata pangkal ayat, (3) mengasingkan anak ayat. Noktah = tamat ayat. ! = seruan. ? = soalan.',
+   note:'Koma: senarai/serangan; Noktah: tamat ayat; Titik bertindih: penjelasan'},
+
+  {sk:'Tanda Baca', type:'Aneka Pilihan',
+   q:'Dalam cakap ajuk, tanda baca yang diletakkan sebelum kata yang dituturkan ialah:',
+   opts:['Tanda koma dan tanda petik','Tanda noktah sahaja','Titik bertindih sahaja','Tanda seru'],ans:0,
+   hint:'Kata-kata yang dituturkan diletakkan dalam tanda petik',
+   exp:'Dalam penulisan dialog/cakap ajuk: (1) guna tanda koma sebelum petikan, (2) letakkan kata yang dituturkan dalam tanda petik (" "). Contoh: Ahmad berkata, "Saya suka membaca."',
+   note:'Format: [S] berkata, "[kata yang dituturkan]"'},
+],
+
+// ================================================================
+// PERIBAHASA
+// ================================================================
+peribahasa:[
+  {sk:'Simpulan Bahasa', type:'Aneka Pilihan',
+   q:'Apakah maksud simpulan bahasa <b>"ringan tulang"</b>?',
+   opts:['Rajin bekerja','Malas bekerja','Kurus badannya','Lemah fizikal'],ans:0,
+   hint:'Lawan kepada "berat tulang"',
+   exp:'"Ringan tulang" bermaksud rajin dan suka bekerja atau membantu orang lain. Lawannya ialah "berat tulang" yang bermaksud malas.',
+   note:'Ringan tulang = rajin; Berat tulang = malas'},
+
+  {sk:'Simpulan Bahasa', type:'Aneka Pilihan',
+   q:'Simpulan bahasa <b>"panjang tangan"</b> bermaksud:',
+   opts:['Suka mencuri','Pemurah','Tangannya panjang','Suka memukul'],ans:0,
+   hint:'Konotasi negatif — berkait dengan harta orang lain',
+   exp:'"Panjang tangan" bermaksud suka mencuri atau mengambil harta orang lain. Contoh: "Budak itu panjang tangan, jangan simpan barang berharga di situ."',
+   note:'Panjang tangan = suka mencuri'},
+
+  {sk:'Simpulan Bahasa', type:'Aneka Pilihan',
+   q:'Maksud simpulan bahasa <b>"buah mulut"</b> ialah:',
+   opts:['Bahan perbualan','Makanan','Orang yang pandai berkata','Gosip sahaja'],ans:0,
+   hint:'Sesuatu yang menjadi bahan "mulut" orang ramai',
+   exp:'"Buah mulut" bermaksud bahan perbualan atau perkara yang diperkatakan oleh ramai orang. Contoh: "Kejadian itu menjadi buah mulut penduduk kampung."',
+   note:'Buah mulut = bahan perbualan umum'},
+
+  {sk:'Simpulan Bahasa', type:'Aneka Pilihan',
+   q:'<b>"Berbudi bahasa"</b> bermaksud:',
+   opts:['Bersopan santun','Berbahasa Melayu','Suka berpuisi','Fasih bercakap'],ans:0,
+   hint:'Budi = peribadi yang baik; bahasa = percakapan yang baik',
+   exp:'"Berbudi bahasa" bermaksud berkelakuan sopan dan beradab dalam percakapan dan tingkah laku. Seseorang yang berbudi bahasa dihormati oleh masyarakat.',
+   note:'Berbudi bahasa = sopan santun dalam kata dan perbuatan'},
+
+  {sk:'Pepatah', type:'Aneka Pilihan',
+   q:'Apakah mesej pepatah <b>"Melentur buluh biarlah dari rebungnya"</b>?',
+   opts:['Didik anak sejak kecil','Buluh mudah dilentur','Jangan buat kerja separuh jalan','Pilih masa yang sesuai'],ans:0,
+   hint:'Rebung = buluh yang masih muda/kecil',
+   exp:'"Melentur buluh biarlah dari rebungnya" bermaksud mendidik anak-anak atau seseorang haruslah dilakukan sejak kecil/awal, kerana waktu itulah yang paling mudah membentuk peribadi mereka.',
+   note:'Rebung (muda) = kanak-kanak; Lentur = didik/bentuk'},
+
+  {sk:'Pepatah', type:'Aneka Pilihan',
+   q:'Pepatah <b>"Biar lambat asalkan selamat"</b> membawa pengajaran:',
+   opts:['Berhati-hati lebih baik daripada tergesa-gesa','Lambat itu baik','Jangan cepat','Selamat adalah perkara utama'],ans:0,
+   hint:'Konteks: dalam usaha mencapai sesuatu',
+   exp:'Pepatah ini mengajar kita bahawa lebih baik melakukan sesuatu dengan berhati-hati dan teliti walaupun lambat, berbanding tergesa-gesa tetapi menimbulkan risiko atau kesilapan.',
+   note:'Kualiti > kelajuan dalam konteks keselamatan'},
+
+  {sk:'Pepatah', type:'Aneka Pilihan',
+   q:'Maksud pepatah <b>"Harimau mati meninggalkan belang, manusia mati meninggalkan nama"</b>:',
+   opts:['Nama baik kekal walaupun sudah mati','Harimau dan manusia berbeza','Jangan lupakan orang mati','Nama penting untuk harimau'],ans:0,
+   hint:'Belang = tanda pengenalan harimau; nama = reputasi manusia',
+   exp:'Pepatah ini bermaksud reputasi dan nama baik seseorang akan kekal dikenang oleh masyarakat walaupun setelah dia meninggal dunia. Justeru, penting untuk kita menjaga nama baik semasa hidup.',
+   note:'Nama baik = warisan yang berkekalan'},
+
+  {sk:'Perumpamaan', type:'Aneka Pilihan',
+   q:'Perumpamaan <b>"Seperti katak di bawah tempurung"</b> bermaksud:',
+   opts:['Orang yang sempit pemikirannya','Katak yang tinggal dalam hutan','Orang yang berhati-hati','Orang yang pemalu'],ans:0,
+   hint:'Tempurung = ruang yang kecil dan terhad',
+   exp:'"Seperti katak di bawah tempurung" menggambarkan seseorang yang sempit pemikirannya, tidak berpengalaman, dan tidak mahu mengetahui perkara di luar lingkungannya.',
+   note:'Tempurung = dunia yang sempit; katak = orang yang terbatas'},
+
+  {sk:'Perumpamaan', type:'Aneka Pilihan',
+   q:'Apakah maksud perumpamaan <b>"Bagai aur dengan tebing"</b>?',
+   opts:['Saling memerlukan antara satu sama lain','Tinggal berdekatan','Bersaing satu sama lain','Bermusuhan tetapi terpaksa bersama'],ans:0,
+   hint:'Aur (buluh) tumbuh di tebing — apa hubungan mereka?',
+   exp:'"Bagai aur dengan tebing" menggambarkan hubungan yang saling memerlukan. Aur mengukuhkan tebing (mencegah hakisan) manakala tebing menyediakan tapak untuk aur tumbuh. Saling bergantung.',
+   note:'Aur + tebing = saling bergantung dan memerlukan'},
+
+  {sk:'Bidalan', type:'Aneka Pilihan',
+   q:'Bidalan <b>"Sesal dahulu pendapatan, sesal kemudian tidak berguna"</b> bermaksud:',
+   opts:['Fikirkan dahulu sebelum bertindak','Jangan menyesal','Bertindak dahulu fikirkan kemudian','Penyesalan adalah sia-sia'],ans:0,
+   hint:'"Sesal dahulu" = berfikir dahulu sebelum bertindak',
+   exp:'Bidalan ini mengajar kita agar berfikir masak-masak dan berhati-hati sebelum mengambil sesuatu tindakan. Setelah berlaku kesilapan, penyesalan tidak akan mengubah keadaan.',
+   note:'Berfikir dulu (sesal dahulu) = elak masalah kemudian'},
+
+  {sk:'Bidalan', type:'Aneka Pilihan',
+   q:'<b>"Sedikit-sedikit, lama-lama jadi bukit"</b> mengajar kita tentang:',
+   opts:['Kepentingan berjimat-cermat dan konsisten','Bukit terbentuk dari sedikit tanah','Sabar dalam menunggu','Jangan tamak dalam mengumpul'],ans:0,
+   hint:'Usaha kecil yang konsisten membawa hasil yang besar',
+   exp:'Bidalan ini mengajar bahawa sesuatu yang dikerjakan sedikit demi sedikit secara konsisten akhirnya akan menghasilkan sesuatu yang besar. Contoh: berjimat sedikit setiap hari akan mengumpul wang yang banyak.',
+   note:'Konsisten + sabar = hasil yang besar lama-kelamaan'},
+
+  {sk:'Maksud Peribahasa', type:'Aneka Pilihan',
+   q:'<b>"Bagai mencincang air"</b> bermaksud:',
+   opts:['Usaha yang sia-sia','Kerja yang mudah','Bekerja tanpa henti','Membuang masa'],ans:0,
+   hint:'Cuba cincang/potong air — apa yang berlaku?',
+   exp:'"Bagai mencincang air" bermaksud melakukan sesuatu usaha yang sia-sia atau tidak mendatangkan hasil. Air yang dipotong akan kembali bersatu — usaha itu tidak berkesan.',
+   note:'Cincang air = usaha sia-sia, tiada hasil kekal'},
+
+  {sk:'Penggunaan dalam Ayat', type:'Aneka Pilihan',
+   q:'Pilih peribahasa yang paling sesuai untuk situasi: <i>"Dua adik beradik itu walaupun berbeza pendapat tetapi saling menyayangi dan memerlukan."</i>',
+   opts:['Bagai aur dengan tebing','Seperti katak di bawah tempurung','Bagai mencincang air','Melentur buluh dari rebungnya'],ans:0,
+   hint:'Situasi: berbeza tetapi saling memerlukan',
+   exp:'"Bagai aur dengan tebing" paling sesuai kerana ia menggambarkan hubungan yang berbeza tetapi saling melengkapi dan memerlukan antara satu sama lain.',
+   note:'Pilih peribahasa yang tepat konteksnya'},
+],
+
+// ================================================================
+// KEFAHAMAN
+// ================================================================
+kefahaman:[
+  {sk:'Soalan Fakta Langsung', type:'Teknik Kefahaman',
+   ctx:'Encik Hamid ialah seorang petani yang rajin. Setiap hari, beliau bangun awal pagi untuk mengerjakan sawahnya. Walaupun usianya sudah lanjut, semangat beliau untuk bekerja tidak pernah luntur.',
+   q:'Apakah pekerjaan Encik Hamid berdasarkan petikan di atas?',
+   opts:['Petani','Nelayan','Guru','Peniaga'],ans:0,
+   hint:'Cari maklumat secara langsung dalam teks',
+   exp:'Jawapan boleh ditemui secara langsung dalam baris pertama: "Encik Hamid ialah seorang petani." Soalan fakta langsung memerlukan anda mengenal pasti maklumat yang tersurat dalam petikan.',
+   note:'Soalan fakta: jawapan tersurat dalam teks — salin/tulis semula'},
+
+  {sk:'Soalan Inferens', type:'Teknik Kefahaman',
+   ctx:'Encik Hamid ialah seorang petani yang rajin. Setiap hari, beliau bangun awal pagi untuk mengerjakan sawahnya. Walaupun usianya sudah lanjut, semangat beliau untuk bekerja tidak pernah luntur.',
+   q:'Apakah yang dapat kita simpulkan tentang watak Encik Hamid?',
+   opts:['Beliau seorang yang gigih dan berdedikasi','Beliau seorang yang kaya-raya','Beliau tidak suka bersosial','Beliau tidak mempunyai anak'],ans:0,
+   hint:'Baca antara baris — apakah sifat yang ditunjukkan melalui tindakannya?',
+   exp:'Inferens = kesimpulan yang tidak dinyatakan secara langsung. Daripada fakta "bangun awal pagi" + "semangat tidak luntur" + "usia lanjut", kita boleh simpulkan bahawa beliau gigih dan berdedikasi.',
+   note:'Inferens: gunakan fakta untuk membuat kesimpulan sendiri'},
+
+  {sk:'Nilai Murni & Pengajaran', type:'Teknik Kefahaman',
+   ctx:'Encik Hamid ialah seorang petani yang rajin. Setiap hari, beliau bangun awal pagi untuk mengerjakan sawahnya. Walaupun usianya sudah lanjut, semangat beliau untuk bekerja tidak pernah luntur.',
+   q:'Apakah nilai murni yang dapat dipelajari daripada petikan ini?',
+   opts:['Ketekunan dan semangat juang yang tinggi','Kepentingan wang dan harta','Nilai persahabatan','Nilai kesantunan berbahasa'],ans:0,
+   hint:'Nilai murni berkaitan sikap dan peribadi watak',
+   exp:'Nilai murni yang menonjol: ketekunan (bekerja setiap hari), semangat juang (tidak luntur walaupun tua), dan ketabahan. Jawapan nilai murni perlu dikaitkan dengan bukti dalam teks.',
+   note:'Nilai murni: kaitkan dengan perbuatan/sikap watak dalam teks'},
+
+  {sk:'Maksud Perkataan', type:'Teknik Kefahaman',
+   ctx:'Para petugas bomba itu bekerja keras tanpa menghiraukan bahaya demi menyelamatkan mangsa yang terperangkap dalam bangunan yang sedang terbakar.',
+   q:'Apakah maksud perkataan <b>"menghiraukan"</b> dalam konteks petikan?',
+   opts:['Mengambil berat/peduli','Melupakan','Menghindari','Melihat'],ans:0,
+   hint:'Lihat konteks: "tanpa menghiraukan bahaya" — mereka tidak ___ bahaya',
+   exp:'"Menghiraukan" bermaksud mengambil peduli atau memperhatikan. "Tanpa menghiraukan bahaya" = tidak mengambil peduli akan bahaya. Makna perkataan perlu dilihat dalam konteks ayat.',
+   note:'Maksud perkataan: pertimbangkan konteks ayat, bukan definisi kamus semata'},
+
+  {sk:'Soalan KBAT', type:'KBAT',
+   ctx:'Para petugas bomba itu bekerja keras tanpa menghiraukan bahaya demi menyelamatkan mangsa yang terperangkap dalam bangunan yang sedang terbakar.',
+   q:'Pada pendapat anda, apakah langkah-langkah yang boleh diambil untuk mencegah kebakaran bangunan?',
+   opts:['Pasang pengesan asap, latihan bomba, elak simpan bahan mudah terbakar','Jangan guna elektrik langsung','Tinggal di bangunan rendah sahaja','Tunggu bomba sedia membantu'],ans:0,
+   hint:'Soalan KBAT = memberi cadangan/pendapat yang rasional',
+   exp:'Soalan KBAT menguji pemikiran kritis. Jawapan terbaik memberi cadangan yang praktikal dan relevan: pasang pengesan asap, latih penghuni cara menggunakan alat pemadam, elakkan simpan bahan mudah terbakar.',
+   note:'KBAT: beri cadangan KONKRIT + RELEVAN + lebih dari 1 langkah'},
+
+  {sk:'Gaya Bahasa', type:'Teknik Kefahaman',
+   q:'Frasa <b>"wajahnya seputih kapas"</b> menggunakan gaya bahasa:',
+   opts:['Simile','Metafora','Personifikasi','Hiperbola'],ans:0,
+   hint:'Perbandingan yang menggunakan "seperti", "bagai", "seputih" dll.',
+   exp:'"Seputih kapas" ialah simile — perbandingan secara langsung menggunakan kata perbandingan (se- + adjektif). Metafora: "wajahnya kapas" (tanpa kata perbandingan). Personifikasi: sifat manusia pada bukan manusia.',
+   note:'Simile = ada kata perbandingan (seperti/bagai/se-); Metafora = tiada'},
+
+  {sk:'Gaya Bahasa', type:'Teknik Kefahaman',
+   q:'<b>"Sang Mentari menyapa bumi dengan senyumannya"</b> menggunakan gaya bahasa:',
+   opts:['Personifikasi','Simile','Hiperbola','Metafora'],ans:0,
+   hint:'Matahari diberi sifat manusia (menyapa, senyuman)',
+   exp:'Personifikasi = memberikan sifat atau tindakan manusia kepada bukan manusia. Di sini, matahari (bukan manusia) "menyapa" dan mempunyai "senyuman" — ini sifat manusia.',
+   note:'Personifikasi: bukan manusia + sifat/tindakan manusia'},
+],
+
+// ================================================================
+// RUMUSAN
+// ================================================================
+rumusan:[
+  {sk:'Mengenal Pasti Isi Tersurat', type:'Teknik Rumusan',
+   ctx:'Aktiviti gotong-royong memberi banyak faedah kepada masyarakat. Pertama, ia dapat mengeratkan hubungan antara penduduk kampung. Kedua, persekitaran kawasan kediaman menjadi lebih bersih dan indah. Ketiga, amalan bergotong-royong dapat dipupuk dalam kalangan generasi muda.',
+   q:'Apakah ISI TERSURAT yang sesuai untuk rumusan faedah gotong-royong?',
+   opts:['Mengeratkan hubungan + kawasan bersih + pupuk amalan pada generasi muda','Gotong-royong adalah aktiviti yang baik','Masyarakat perlu bergotong-royong','Faedah gotong-royong amat banyak'],ans:0,
+   hint:'Isi tersurat = poin yang jelas dinyatakan dalam teks, bukan ulangan umum',
+   exp:'Isi tersurat mestilah poin yang JELAS DINYATAKAN dalam petikan. Tiga isi tersurat ialah: (1) mengeratkan hubungan, (2) kawasan bersih, (3) pupuk amalan gotong-royong. Elak ayat umum/kabur.',
+   note:'Isi tersurat: poin spesifik dari teks; bukan tafsiran/pendapat sendiri'},
+
+  {sk:'Elak Huraian Lebihan', type:'Teknik Rumusan',
+   q:'Manakah yang PALING SESUAI sebagai ayat isi dalam rumusan?',
+   opts:['Gotong-royong mengeratkan hubungan penduduk.','Gotong-royong sangat baik kerana ia mengeratkan hubungan penduduk dan ini akan menjadikan mereka lebih rapat dan saling memahami antara satu sama lain sehingga terjalin persaudaraan yang kukuh.','Masyarakat harus bergotong-royong.','Faedah gotong-royong amat banyak.'],ans:0,
+   hint:'Rumusan: padat dan tepat — elak huraian panjang',
+   exp:'Rumusan memerlukan ayat yang ringkas tetapi lengkap. Pilihan A adalah tepat: satu poin dalam satu ayat yang jelas. Pilihan B terlalu panjang dan mengandungi huraian lebihan.',
+   note:'Rumusan: 1 isi = 1 ayat ringkas; elak huraian panjang'},
+
+  {sk:'Penggunaan Bahasa Sendiri', type:'Teknik Rumusan',
+   q:'Dalam menulis rumusan, penggunaan bahasa sendiri bermaksud:',
+   opts:['Tulis semula isi dengan perkataan berbeza tanpa mengubah makna','Tulis semula teks asal sepenuhnya','Terjemahkan ke bahasa lain','Tambah pendapat peribadi'],ans:0,
+   hint:'Bahasa sendiri ≠ salin semula; tetapi ≠ ubah makna',
+   exp:'Bahasa sendiri bermaksud menyatakan semula isi teks menggunakan perkataan yang berbeza tetapi makna kekal sama. Elak menyalin ayat terus dari teks. Ini menunjukkan kefahaman anda.',
+   note:'Bahasa sendiri: sinonim/parafrasa — makna sama, perkataan berbeza'},
+
+  {sk:'Had Perkataan', type:'Teknik Rumusan',
+   q:'Berapa panjang biasanya jawapan rumusan untuk peperiksaan O Level BM?',
+   opts:['80-100 patah perkataan','200-300 patah perkataan','30-40 patah perkataan','Tiada had'],ans:0,
+   hint:'Rumusan mestilah ringkas — perhatikan arahan soalan',
+   exp:'Rumusan O Level biasanya memerlukan jawapan 80-100 patah perkataan (bergantung arahan soalan). Penting untuk: (1) ikut had perkataan, (2) masukkan semua isi penting, (3) tulis dalam bentuk perenggan.',
+   note:'Ikut arahan had perkataan; tulis dalam perenggan bukan poin'},
+
+  {sk:'Ayat Gramatis dalam Rumusan', type:'Teknik Rumusan',
+   q:'Manakah ayat pembuka rumusan yang paling sesuai?',
+   opts:['Petikan ini membincangkan tentang faedah aktiviti gotong-royong kepada masyarakat.','Petikan di atas adalah tentang gotong-royong.','Gotong-royong ada banyak faedah.','Dalam petikan ini, ia ada faedah gotong-royong.'],ans:0,
+   hint:'Ayat pembuka rumusan perlu gramatis, lengkap dan formal',
+   exp:'Ayat pembuka rumusan terbaik: formal, gramatis, nyatakan tajuk/isi pokok. Pilihan A adalah terbaik. Elak: "adalah tentang" (tidak formal), "ada" (percakapan), "ia" tanpa rujukan jelas.',
+   note:'Pembuka rumusan: "Petikan ini membincangkan..." atau "Petikan di atas menerangkan..."'},
+],
+
+// ================================================================
+// PENULISAN
+// ================================================================
+penulisan:[
+  {sk:'Format Surat Rasmi', type:'Penulisan Berformat',
+   q:'Dalam surat rasmi, bahagian manakah yang MESTI ada tetapi TIDAK perlu dalam surat tidak rasmi?',
+   opts:['Nombor rujukan dan tarikh rasmi','Salam hormat','Tanda tangan','Nama penulis'],ans:0,
+   hint:'Surat rasmi mempunyai format yang lebih ketat',
+   exp:'Surat rasmi memerlukan: (1) nombor rujukan, (2) tarikh rasmi (format penuh), (3) alamat penghantar, (4) alamat penerima, (5) perkara. Surat tidak rasmi lebih bebas formatnya.',
+   note:'Surat rasmi: nombor rujukan + "Perkara:" + format penuh tarikh'},
+
+  {sk:'Format Surat Rasmi', type:'Penulisan Berformat',
+   q:'Bahasa yang betul untuk penutup surat rasmi ialah:',
+   opts:['"Yang benar,"','Yang ikhlas,"','Jumpa lagi,"','Salam sayang,"'],ans:0,
+   hint:'Surat rasmi menggunakan penutup yang formal',
+   exp:'"Yang benar" ialah penutup standard untuk surat rasmi. "Yang ikhlas" boleh digunakan dalam surat separa rasmi. "Jumpa lagi" dan "Salam sayang" hanya sesuai untuk surat tidak rasmi/peribadi.',
+   note:'Rasmi: "Yang benar" / "Yang menurut perintah"; Tidak rasmi: "Yang ikhlas" / "Salam sayang"'},
+
+  {sk:'Penanda Wacana', type:'Penulisan Umum',
+   q:'Penanda wacana yang sesuai untuk memulakan perenggan baru yang meneruskan idea ialah:',
+   opts:['Selain itu, / Tambahan pula,','Sebaliknya, / Walau bagaimanapun,','Kesimpulannya, / Akhir sekali,','Pertama sekali,'],ans:0,
+   hint:'Penanda wacana ada fungsi berbeza: tambah, kontras, simpulan',
+   exp:'"Selain itu" dan "Tambahan pula" digunakan untuk menambah idea yang selari. "Sebaliknya" untuk idea bertentangan. "Kesimpulannya" untuk perenggan penutup. "Pertama sekali" untuk poin pertama.',
+   note:'Tambah: Selain itu/Tambahan pula; Kontras: Sebaliknya; Simpulan: Kesimpulannya'},
+
+  {sk:'Penanda Wacana', type:'Penulisan Umum',
+   q:'Perenggan penutup karangan paling sesuai dimulakan dengan:',
+   opts:['Kesimpulannya,','Pertama sekali,','Selain itu,','Tambahan pula,'],ans:0,
+   hint:'Perenggan penutup merumuskan isi karangan',
+   exp:'"Kesimpulannya" digunakan untuk perenggan penutup yang merumuskan keseluruhan karangan. Penanda wacana penutup lain: "Secara ringkasnya", "Sebagai rumusan", "Akhir kata".',
+   note:'Penutup: Kesimpulannya / Secara ringkasnya / Sebagai rumusan'},
+
+  {sk:'Format Laporan', type:'Penulisan Berformat',
+   q:'Bahagian yang WAJIB ada dalam laporan rasmi ialah:',
+   opts:['Tajuk, Pendahuluan, Isi, Penutup/Cadangan','Tajuk dan tanda tangan sahaja','Pendahuluan dan kesimpulan','Nama pengarang dan tarikh'],ans:0,
+   hint:'Laporan ada struktur khusus yang berbeza dari karangan biasa',
+   exp:'Laporan rasmi mesti ada: (1) Tajuk laporan, (2) Tujuan/Pendahuluan, (3) Kandungan/Isi (pelbagai aspek), (4) Penutup/Cadangan, (5) Nama dan tandatangan. Setiap bahagian ada subjudul.',
+   note:'Laporan: Tajuk + Pendahuluan + Isi (berbilang aspek) + Cadangan/Penutup'},
+
+  {sk:'Variasi Ayat', type:'Penulisan Umum',
+   q:'Antara berikut, manakah menunjukkan VARIASI AYAT yang baik dalam karangan?',
+   opts:['Gabungan ayat panjang, sederhana, dan pendek secara bergilir','Semua ayat pendek dan ringkas','Semua ayat panjang dan kompleks','Ulang struktur ayat yang sama'],ans:0,
+   hint:'Variasi = kepelbagaian; elak monotoni',
+   exp:'Variasi ayat bermaksud menggunakan pelbagai jenis ayat: panjang (kompleks), sederhana, pendek (kesan), ayat aktif dan pasif, ayat tanya retorik, dan pelbagai penanda wacana. Ini menjadikan karangan lebih menarik.',
+   note:'Variasi ayat: panjang + pendek + pelbagai jenis — elak monotoni'},
+
+  {sk:'Peribahasa dalam Karangan', type:'Penulisan Umum',
+   q:'Cara yang paling berkesan menggunakan peribahasa dalam karangan ialah:',
+   opts:['Gunakan dalam konteks yang tepat dan huraikan kaitan dengan isi','Letak peribahasa di permulaan setiap perenggan','Gunakan sebanyak mungkin peribahasa','Salin peribahasa tanpa kaitan dengan isi'],ans:0,
+   hint:'Peribahasa perlu relevan dan dikaitkan dengan isi',
+   exp:'Peribahasa dalam karangan perlu: (1) tepat konteks/isi, (2) dihuraikan kaitannya, (3) tidak keterlaluan (2-3 cukup). Contoh: selepas nulis isi tentang rajin bekerja, tulis "Hal ini sesuai dengan peribahasa \'ringan tulang\' yang bermaksud rajin bekerja."',
+   note:'Peribahasa: guna konteks tepat + hurai kaitan + jangan keterlaluan'},
+
+  {sk:'Karangan Berformat', type:'Penulisan Berformat',
+   q:'Format dialog/skrip drama memerlukan:',
+   opts:['Nama watak diikuti tanda noktah bertindih sebelum dialog','Tanda petik untuk setiap ayat','Nama watak dalam kurungan','Dialog dalam bentuk prosa'],ans:0,
+   hint:'Dialog: Nama watak: "....."',
+   exp:'Format dialog/skrip: NAMA WATAK: "Dialog yang dituturkan." Nama watak ditulis dengan huruf besar/tebal, diikuti tanda noktah bertindih ( : ), kemudian dialog dalam tanda petik.',
+   note:'Dialog: WATAK: "Dialog..." — nama watak + ( : ) + petikan'},
+],
+};
+
+// ===================== STATE =====================
+let pname='', selSkill='', selSubs=[], curQs=[], qIdx=0, score=0, streak=0;
+let timer=null, tLeft=0, qStart=0, qTimes=[], hintUsed=false;
+const QN=15,TL=75;
+
+function saveP(d){try{localStorage.setItem('bm_prog',JSON.stringify(d));}catch(e){}}
+function loadP(){try{const d=localStorage.getItem('bm_prog');return d?JSON.parse(d):{sessions:[],skills:{},total:0};}catch(e){return{sessions:[],skills:{},total:0};}}
+function saveName(n){try{localStorage.setItem('bm_name',n);}catch(e){}}
+function loadName(){try{return localStorage.getItem('bm_name')||'';}catch(e){return'';}}
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});const e=document.getElementById(id);e.style.display='flex';e.classList.add('active');}
+
+function startApp(){
+  sfxClick();
+  pname=document.getElementById('nameInput').value.trim()||'Pelajar';
+  saveName(pname);
+  document.getElementById('uname').textContent=pname;
+  buildSkillGrid();
+  show('skillselect');
+}
+
+function buildSkillGrid(){
+  const p=loadP(),g=document.getElementById('skillsGrid');
+  g.innerHTML='';
+  SKILLS.forEach(s=>{
+    const st=p.skills[s.id]||{a:0,c:0};
+    const pct=st.a>0?Math.round(st.c/st.a*100):0;
+    const d=document.createElement('div');
+    d.className='skill-card';
+    d.style.setProperty('--c',s.color);
+    d.dataset.id=s.id;
+    d.innerHTML=`<div class="sk-count">${st.a>0?pct+'%':'BARU'}</div><span class="sk-icon">${s.icon}</span><div class="sk-name">${s.name}</div><div class="sk-sub">${s.sub}</div>`;
+    d.onclick=()=>selectSkill(s.id,d);
+    g.appendChild(d);
+  });
+}
+
+function selectSkill(id,el){
+  sfxClick();
+  document.querySelectorAll('.skill-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  selSkill=id;
+  selSubs=[];
+  // build subtopics
+  const sk=SKILLS.find(s=>s.id===id);
+  const panel=document.getElementById('stPanel'),grid=document.getElementById('stGrid');
+  grid.innerHTML='';
+  sk.subtopics.forEach(st=>{
+    const btn=document.createElement('button');
+    btn.className='st-chip';btn.textContent=st;
+    btn.onclick=()=>{sfxClick();btn.classList.toggle('active');if(btn.classList.contains('active'))selSubs.push(st);else selSubs=selSubs.filter(x=>x!==st);};
+    grid.appendChild(btn);
+  });
+  panel.classList.add('open');
+  const sBtn=document.getElementById('startBtn');
+  sBtn.disabled=false;
+  sBtn.textContent=`Mulakan Kuiz — ${sk.name} →`;
+}
+
+function beginQuiz(){
+  sfxClick();
+  if(!selSkill)return;
+  let pool=(QB[selSkill]||[]).map(q=>({...q}));
+  if(selSubs.length>0)pool=pool.filter(q=>selSubs.includes(q.sk));
+  if(pool.length===0)pool=(QB[selSkill]||[]).map(q=>({...q}));
+  pool=shuffle(pool);
+  curQs=pool.slice(0,Math.min(QN,pool.length));
+  qIdx=0;score=0;streak=0;qTimes=[];
+  show('quiz');
+  loadQ();
+}
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+function loadQ(){
+  if(qIdx>=curQs.length){endQuiz();return;}
+  const q=curQs[qIdx];
+  hintUsed=false;
+  document.getElementById('fbEl').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+  document.getElementById('hintBox').style.display='none';
+  document.getElementById('hintBtn').style.display='inline-flex';
+
+  const pct=(qIdx/curQs.length)*100;
+  document.getElementById('qPfill').style.width=pct+'%';
+  document.getElementById('qNum').textContent=`S ${qIdx+1}/${curQs.length}`;
+
+  const sk=SKILLS.find(s=>s.id===selSkill);
+  document.getElementById('qTag').textContent=sk?sk.name:'BM';
+  document.getElementById('qTypeEl').textContent=q.type||'Aneka Pilihan';
+
+  // context
+  const ctx=document.getElementById('qCtx');
+  if(q.ctx){ctx.innerHTML=q.ctx;ctx.style.display='block';}
+  else ctx.style.display='none';
+
+  document.getElementById('qText').innerHTML=q.q;
+  document.getElementById('hintBox').textContent='💡 '+q.hint;
+
+  // shuffle options
+  const opts=q.opts.map((t,i)=>({t,i}));
+  const shuf=shuffle(opts);
+  const corrText=q.opts[q.ans];
+
+  const grid=document.getElementById('optsEl');
+  grid.innerHTML='';
+  const keys=['A','B','C','D','E'];
+  shuf.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn.innerHTML=`<span class="opt-key">${keys[i]}</span>${opt.t}`;
+    btn.dataset.t=opt.t;
+    btn.onclick=()=>selectAns(btn,opt.t===corrText,q,grid,corrText);
+    grid.appendChild(btn);
+  });
+
+  startTimer();
+  qStart=Date.now();
+  const card=document.getElementById('qCard');
+  card.style.animation='none';void card.offsetWidth;card.style.animation='fadeUp 0.4s ease';
+}
+
+function startTimer(){
+  clearInterval(timer);
+  tLeft=TL;
+  updTimer();
+  timer=setInterval(()=>{
+    tLeft--;updTimer();
+    if(tLeft<=10&&tLeft>0&&tLeft%3===0)sfxNext();
+    if(tLeft<=0){clearInterval(timer);timeOut();}
+  },1000);
+}
+function updTimer(){
+  const el=document.getElementById('timerEl');
+  el.textContent=(tLeft<=10?'⏱ ':'⏱ ')+tLeft;
+  el.className='timer'+(tLeft<=10?' warn':'');
+}
+function timeOut(){
+  sfxWrong();
+  const q=curQs[qIdx];
+  const corrText=q.opts[q.ans];
+  document.getElementById('optsEl').querySelectorAll('.opt').forEach(b=>{b.disabled=true;if(b.dataset.t===corrText)b.classList.add('reveal');});
+  streak=0;recQ(false,TL);
+  showFB(false,q,'⏰ Masa Tamat!');
+}
+
+function selectAns(btn,ok,q,grid,corrText){
+  clearInterval(timer);
+  const t=Math.round((Date.now()-qStart)/1000);
+  grid.querySelectorAll('.opt').forEach(b=>{b.disabled=true;b.onclick=null;});
+  if(ok){
+    btn.classList.add('correct');sfxOk();streak++;
+    score+=hintUsed?8:10;score+=Math.max(0,Math.floor(tLeft/12));
+  }else{
+    btn.classList.add('wrong');sfxWrong();streak=0;
+    grid.querySelectorAll('.opt').forEach(b=>{if(b.dataset.t===corrText)b.classList.add('correct');});
+    document.getElementById('qCard').classList.add('shake');
+    setTimeout(()=>document.getElementById('qCard').classList.remove('shake'),400);
+  }
+  document.getElementById('streakEl').textContent='🔥 '+streak;
+  document.getElementById('ptsEl').textContent=score+' mata';
+  recQ(ok,t);showFB(ok,q);
+}
+
+function recQ(ok,t){
+  qTimes.push(t);
+  const q=curQs[qIdx];
+  const p=loadP();
+  if(!p.skills[selSkill])p.skills[selSkill]={a:0,c:0};
+  p.skills[selSkill].a++;if(ok)p.skills[selSkill].c++;
+  p.total=(p.total||0)+1;
+  saveP(p);
+}
+
+function showFB(ok,q,title){
+  const fb=document.getElementById('fbEl');
+  fb.className='fb '+(ok?'ok':'bad');
+  document.getElementById('fbIcon').textContent=ok?'✅':'❌';
+  document.getElementById('fbTitle').textContent=title||(ok?getOkMsg():getBadMsg());
+  document.getElementById('fbExp').innerHTML=q.exp;
+  const note=document.getElementById('fbNote');
+  if(q.note){note.textContent='📌 '+q.note;note.style.display='block';}
+  else note.style.display='none';
+  fb.style.display='block';
+  document.getElementById('nextBtn').style.display='inline-block';
+}
+
+function getOkMsg(){const m=['Betul! 🌟','Tepat sekali! 🎯','Bagus! 💪','Cemerlang! 🏆','Pandai! ⚡'];return m[Math.floor(Math.random()*m.length)];}
+function getBadMsg(){const m=['Hampir! Cuba lagi 💡','Tak mengapa — belajar dari ini! 📖','Teruskan usaha! 🚀','Tinjau semula nota! 📝'];return m[Math.floor(Math.random()*m.length)];}
+
+function showHint(){sfxClick();hintUsed=true;document.getElementById('hintBox').style.display='block';document.getElementById('hintBtn').style.display='none';}
+function nextQ(){sfxNext();qIdx++;loadQ();}
+
+function endQuiz(){
+  clearInterval(timer);sfxDone();
+  const total=curQs.length,correct=Math.round(score/10),pct=Math.round(correct/total*100);
+  const avgT=qTimes.length?Math.round(qTimes.reduce((a,b)=>a+b,0)/qTimes.length):0;
+  const grade=pct>=90?'A*':pct>=80?'A':pct>=70?'B':pct>=55?'C':'D';
+  const gc={A:'gA','A*':'gA',B:'gB',C:'gC',D:'gD'};
+
+  const p=loadP();
+  if(!p.sessions)p.sessions=[];
+  const sk=SKILLS.find(s=>s.id===selSkill);
+  p.sessions.unshift({date:new Date().toLocaleDateString('ms-MY'),time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),skill:sk?sk.name:selSkill,score:correct,total,pct,grade,avgT});
+  if(p.sessions.length>40)p.sessions=p.sessions.slice(0,40);
+  saveP(p);
+
+  const r=document.getElementById('gradeRing');
+  r.textContent=grade;r.className='grade-ring '+(gc[grade]||'gF');
+  document.getElementById('rsScore').textContent=correct+'/'+total;
+  document.getElementById('rsPct').textContent=pct+'%';
+  document.getElementById('rsTime').textContent=avgT+'s';
+  document.getElementById('resTitle').textContent=pct>=80?'Cemerlang! 🏆':pct>=60?'Bagus! Teruskan! 💪':'Perlu Lebih Usaha! 📚';
+  document.getElementById('resSub').textContent=pct>=80?'Anda menguasai topik ini!':'Ulang kaji bahagian yang lemah ya.';
+  show('results');
+}
+
+function retryQuiz(){sfxClick();qIdx=0;score=0;streak=0;qTimes=[];curQs=shuffle(curQs);show('quiz');loadQ();}
+function backToSelect(){sfxClick();selSkill='';selSubs=[];buildSkillGrid();document.getElementById('stPanel').classList.remove('open');document.getElementById('startBtn').disabled=true;document.getElementById('startBtn').textContent='Pilih kemahiran untuk bermula →';show('skillselect');}
+
+function showProgress(){
+  sfxClick();
+  const p=loadP();
+  document.getElementById('progName').textContent=pname+"'s Dashboard";
+  const total=p.total||0;
+  let tc=0;Object.values(p.skills||{}).forEach(s=>tc+=s.c||0);
+  const ov=total>0?Math.round(tc/total*100):0;
+  document.getElementById('overallBar').style.width=ov+'%';
+  document.getElementById('ovText').textContent=ov+'% tepat';
+  document.getElementById('ovQ').textContent=total+' soalan dijawab';
+
+  const grid=document.getElementById('skillPerfGrid');
+  grid.innerHTML='';
+  SKILLS.forEach(sk=>{
+    const s=p.skills[sk.id]||{a:0,c:0};
+    const pct=s.a>0?Math.round(s.c/s.a*100):0;
+    const d=document.createElement('div');d.className='spg';
+    d.innerHTML=`<div class="spg-name">${sk.icon} ${sk.name}</div><div class="spg-info"><span>${s.c||0}/${s.a||0}</span><span style="color:${sk.color}">${pct}%</span></div><div class="spg-bar"><div class="spg-fill" style="width:${pct}%;background:${sk.color}"></div></div>`;
+    grid.appendChild(d);
+  });
+
+  const hist=document.getElementById('histList');
+  const ses=(p.sessions||[]).slice(0,8);
+  if(!ses.length){hist.innerHTML='<p style="color:var(--dim);font-size:0.85rem;">Tiada sesi lagi.</p>';}
+  else{
+    hist.innerHTML=ses.map(s=>{
+      const gc=s.grade==='A'||s.grade==='A*'?'var(--green)':s.grade==='B'?'var(--blue)':s.grade==='C'?'var(--yellow)':'var(--red)';
+      return `<div class="hist-item"><div><div class="hist-topic">${s.skill}</div><div class="hist-time">${s.date} ${s.time}</div></div><div style="display:flex;align-items:center;gap:10px;"><div class="hist-score" style="color:${gc}">${s.score}/${s.total}</div><div class="hist-grade" style="background:${gc}22;color:${gc};border:1px solid ${gc}44">${s.grade}</div></div></div>`;
+    }).join('');
+  }
+  show('progress');
+}
+
+function clearProg(){sfxClick();if(confirm('Padam semua data prestasi?')){try{localStorage.removeItem('bm_prog');}catch(e){}showProgress();}}
+
+// init
+document.getElementById('nameInput').addEventListener('keypress',e=>{if(e.key==='Enter')startApp();});
+const sn=loadName();if(sn)document.getElementById('nameInput').value=sn;
+</script>
+</body>
+</html>
